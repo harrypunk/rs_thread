@@ -8,11 +8,10 @@ fn main() {
     let (tx2, rx2): (Sender<u16>, Receiver<u16>) = mpsc::channel();
 
     thread::spawn(move || {
-        let ref_t1 = &tx1;
         loop {
             rx2.recv().iter().map(|x| x * x).for_each(|x| {
                 println!("calc thread recv {}", x);
-                ref_t1.send(x).unwrap();
+                &tx1.send(x).unwrap();
             });
         }
     });
